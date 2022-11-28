@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "engines": {
     "node": "16.16.0"
   },
@@ -14,6 +15,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^4.6.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "nodemon": "^2.0.20"
+  },
+  "devDependencies": {
+    "prisma": "^4.6.1"
   }
 }
