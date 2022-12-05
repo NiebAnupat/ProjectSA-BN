@@ -1,0 +1,92 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class appointment {
+   AP_SUBJECT: varchar(100)
+   AP_DESCRIPTION: text
+   AP_LOCATION_NUMBER: int(11)
+   AP_TIME_START: datetime
+   AP_TIME_END: datetime
+   EM_FROM: varchar(7)
+   AP_ID: int(11)
+}
+class appointment_to {
+   EM_ID: varchar(7)
+   AP_ID: int(11)
+   AP_TO_ID: int(11)
+}
+class department {
+   DP_NAME: varchar(100)
+   DP_ID: int(11)
+}
+class employee {
+   EM_FNAME: varchar(100)
+   EM_LNAME: varchar(100)
+   EM_ADDRESS: text
+   EM_GENDER: varchar(6)
+   EM_TEL: char(10)
+   EM_BRITHDAY: date
+   DP_ID: int(11)
+   P_ID: int(11)
+   EM_SALARY: double
+   EM_HIRE_DATE: date
+   EM_IMAGE: longblob
+   EM_CHANGE_AT: timestamp
+   EM_IS_ACTIVARE: tinyint(1)
+   EM_ID: varchar(7)
+}
+class leave_work {
+   EM_ID: varchar(7)
+   L_DATE: date
+   L_NOTE: text
+   L_STATUS  /* t=Allow f=Denied p=Pending */: char(1)
+   L_IMAGE: longblob
+   L_ID: int(11)
+}
+class pay_salary {
+   EM_ID: varchar(7)
+   PY_DATE: timestamp
+   PY_SSO: double
+   PY_TAX: double
+   PY_TOTAL: double
+   PY_ID: int(11)
+}
+class position {
+   P_NAME: varchar(50)
+   P_ID: int(11)
+}
+class room {
+   R_NAME: varchar(100)
+   R_USING_ID: int(11)
+   R_NUMBER: int(11)
+}
+class using_room {
+   R_ID: int(11)
+   AP_ID: int(11)
+   USE_ID: int(11)
+}
+class work_time_check {
+   EM_ID: varchar(7)
+   DATE: date
+   IN_AT: timestamp
+   OUT_AT: timestamp
+   IS_LATE: tinyint(1)
+   WT_ID: int(11)
+}
+
+appointment      -[#595959,plain]-^  employee        : "EM_FROM:EM_ID"
+appointment      -[#595959,plain]-^  room            : "AP_LOCATION_NUMBER:R_NUMBER"
+appointment_to   -[#595959,plain]-^  appointment     : "AP_ID"
+appointment_to   -[#595959,plain]-^  employee        : "EM_ID"
+employee         -[#595959,plain]-^  department      : "DP_ID"
+employee         -[#595959,plain]-^  position        : "P_ID"
+leave_work       -[#595959,plain]-^  employee        : "EM_ID"
+pay_salary       -[#595959,plain]-^  employee        : "EM_ID"
+room             -[#595959,plain]-^  using_room      : "R_USING_ID:USE_ID"
+using_room       -[#595959,plain]-^  appointment     : "AP_ID"
+using_room       -[#595959,plain]-^  room            : "R_ID:R_NUMBER"
+work_time_check  -[#595959,plain]-^  employee        : "EM_ID"
+@enduml

@@ -1,0 +1,33 @@
+digraph "project_sa" {
+
+splines  = ortho;
+fontname = "Inconsolata";
+
+node [colorscheme = ylgnbu4];
+edge [colorscheme = dark28, dir = both];
+
+appointment     [shape = record, pos = "2.382,7.424!"     , label = "{ appointment |  AP_SUBJECT : varchar(100)\l  AP_DESCRIPTION : text\l  AP_LOCATION_NUMBER : int(11)\l  AP_TIME_START : datetime\l  AP_TIME_END : datetime\l  EM_FROM : varchar(7)\l| AP_ID : int(11)\l }"];
+appointment_to  [shape = record, pos = "-0.833,6.813!"    , label = "{ appointment_to |  EM_ID : varchar(7)\l  AP_ID : int(11)\l| AP_TO_ID : int(11)\l }"];
+department      [shape = record, pos = "11.333,7.771!"    , label = "{ department |  DP_NAME : varchar(100)\l| DP_ID : int(11)\l }"];
+employee        [shape = record, pos = "7.813,13.215!"    , label = "{ employee |  EM_FNAME : varchar(100)\l  EM_LNAME : varchar(100)\l  EM_ADDRESS : text\l  EM_GENDER : varchar(6)\l  EM_TEL : char(10)\l  EM_BRITHDAY : date\l  DP_ID : int(11)\l  P_ID : int(11)\l  EM_SALARY : double\l  EM_HIRE_DATE : date\l  EM_IMAGE : longblob\l  EM_CHANGE_AT : timestamp\l  EM_IS_ACTIVARE : tinyint(1)\l| EM_ID : varchar(7)\l }"];
+leave_work      [shape = record, pos = "6.910,16.715!"    , label = "{ leave_work |  EM_ID : varchar(7)\l  L_DATE : date\l  L_NOTE : text\l  L_STATUS  /* t=Allow f=Denied p=Pending */ : char(1)\l  L_IMAGE : longblob\l| L_ID : int(11)\l }"];
+pay_salary      [shape = record, pos = "11.431,11.993!"   , label = "{ pay_salary |  EM_ID : varchar(7)\l  PY_DATE : timestamp\l  PY_SSO : double\l  PY_TAX : double\l  PY_TOTAL : double\l| PY_ID : int(11)\l }"];
+position        [shape = record, pos = "-2.174,11.382!"   , label = "{ position |  P_NAME : varchar(50)\l| P_ID : int(11)\l }"];
+room            [shape = record, pos = "2.778,3.757!"     , label = "{ room |  R_NAME : varchar(100)\l  R_USING_ID : int(11)\l| R_NUMBER : int(11)\l }"];
+using_room      [shape = record, pos = "6.042,3.757!"     , label = "{ using_room |  R_ID : int(11)\l  AP_ID : int(11)\l| USE_ID : int(11)\l }"];
+work_time_check [shape = record, pos = "8.014,5.882!"     , label = "{ work_time_check |  EM_ID : varchar(7)\l  DATE : date\l  IN_AT : timestamp\l  OUT_AT : timestamp\l  IS_LATE : tinyint(1)\l| WT_ID : int(11)\l }"];
+
+appointment     -> employee        [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "EM_FROM:EM_ID", headlabel = ""];
+appointment     -> room            [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "AP_LOCATION_NUMBER:R_NUMBER", headlabel = ""];
+appointment_to  -> appointment     [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "AP_ID", headlabel = ""];
+appointment_to  -> employee        [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "EM_ID", headlabel = ""];
+employee        -> department      [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "DP_ID", headlabel = ""];
+employee        -> position        [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "P_ID", headlabel = ""];
+leave_work      -> employee        [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "EM_ID", headlabel = ""];
+pay_salary      -> employee        [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "EM_ID", headlabel = ""];
+room            -> using_room      [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "R_USING_ID:USE_ID", headlabel = ""];
+using_room      -> appointment     [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "AP_ID", headlabel = ""];
+using_room      -> room            [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "R_ID:R_NUMBER", headlabel = ""];
+work_time_check -> employee        [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "EM_ID", headlabel = ""];
+
+}
