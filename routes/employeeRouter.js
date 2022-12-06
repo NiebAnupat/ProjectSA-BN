@@ -10,8 +10,8 @@ const {
 } = require( '../controllers/employee' );
 
 // GET API
-router.get( '/', getEmployees );
-router.get( '/:id', getEmployee );
+router.get( '/all', getEmployees );
+router.get( '/by/:id', getEmployee );
 
 // PUT API
 router.put( '/:id', upload.single( 'EM_IMAGE' ), updateEmployee );

@@ -1,5 +1,6 @@
 const fs = require( "fs" );
 const { PrismaClient } = require( "@prisma/client" );
+const moment = require( "moment/moment" );
 const prisma = new PrismaClient();
 
 const leaveWork = async ( req, res ) => {
@@ -31,8 +32,8 @@ const leaveWork = async ( req, res ) => {
         } )
 
         // get amount of days
-        const date1 = new Date( L_DATE_START);
-        const date2 = new Date( L_DATE_END);
+        const date1 = new Date( L_DATE_START );
+        const date2 = new Date( L_DATE_END );
         const diffTime = Math.abs( date2 - date1 );
         let diffDays = Math.ceil( diffTime / (1000 * 60 * 60 * 24) ) + 1;
 
@@ -42,7 +43,7 @@ const leaveWork = async ( req, res ) => {
 
         if ( leave_remaining ) {
             if ( leave_remaining.LR_REMAIN_DATE < diffDays ) {
-                return res.json(null)
+                return res.json( null )
             }
         } else {
             //get max date of leave type
@@ -53,7 +54,7 @@ const leaveWork = async ( req, res ) => {
             } )
             const maxDate = leaveTypeMaxDate.LY_MAX_DATE;
             if ( maxDate < diffDays ) {
-                return res.json(null)
+                return res.json( null )
             }
         }
 
@@ -61,8 +62,8 @@ const leaveWork = async ( req, res ) => {
             data : {
                 EM_ID,
                 L_TYPE,
-                L_DATE_START : new Date( L_DATE_START ),
-                L_DATE_END : new Date( L_DATE_END ),
+                L_DATE_START : new Date( moment( L_DATE_START ).format( 'YYYY-MM-DD' ) ),
+                L_DATE_END : new Date( moment( L_DATE_END ).format( 'YYYY-MM-DD' ) ),
                 L_NOTE,
                 L_IMAGE : img
             }
@@ -72,12 +73,12 @@ const leaveWork = async ( req, res ) => {
         if ( leaveWork ) {
             console.log( "leaveWork and leaveRemaining created".green );
             res.status( 200 ).json( leaveWork );
-        } else return res.json(null)
+        } else return res.json( null )
 
 
     } catch ( error ) {
         console.log( `${ error }`.red );
-        return  res.status( 500 )
+        return res.status( 500 )
     }
 }
 
@@ -88,6 +89,9 @@ const getAllLeaveWork = async ( req, res ) => {
             include : {
                 employee : true,
                 leave_type : true
+            },
+            orderBy : {
+                L_ID : 'desc'
             }
         } );
         console.log( 'sent all leaveWork...'.green );
@@ -101,9 +105,20 @@ const getLeaveWork = async ( req, res ) => {
     try {
         console.log( 'GET leaveWork'.bgBlue );
         const { id } = req.params;
-        const leaveWork = await prisma.leave_work.findUnique( {
+        const leaveWork = await prisma.leave_work.findMany( {
             where : {
                 EM_ID : id
+            },
+            include : {
+                employee : {
+                    include : {
+                        department : true
+                    }
+                },
+                leave_type : true
+            },
+            orderBy : {
+                L_ID : 'desc'
             }
         } );
         console.log( 'Sent leaveWork...'.green );
@@ -122,8 +137,15 @@ const getPendingLeaveWork = async ( req, res ) => {
                 L_STATUS : 'p'
             },
             include : {
-                employee : true,
+                employee : {
+                    include : {
+                        department : true
+                    }
+                },
                 leave_type : true
+            },
+            orderBy : {
+                L_ID : 'desc'
             }
         } );
         console.log( 'Sent pending leaveWork...'.green );
@@ -144,6 +166,9 @@ const getApprovedLeaveWork = async ( req, res ) => {
             include : {
                 employee : true,
                 leave_type : true
+            },
+            orderBy : {
+                L_ID : 'desc'
             }
         } );
 
@@ -166,6 +191,9 @@ const getRejectedLeaveWork = async ( req, res ) => {
             include : {
                 employee : true,
                 leave_type : true
+            },
+            orderBy : {
+                L_ID : 'desc'
             }
         } );
         console.log( 'Sent rejected leaveWork...'.green );
@@ -183,15 +211,23 @@ const getTodayApprovedLeaveWork = async ( req, res ) => {
             where : {
                 L_STATUS : 't',
                 L_DATE_START : {
-                    gte : new Date()
+                    lte : new Date( moment().format( 'YYYY-MM-DD' ) )
                 },
                 L_DATE_END : {
-                    lte : new Date()
+                    gte : new Date( moment().format( 'YYYY-MM-DD' ) )
                 }
             },
             include : {
-                employee : true,
+                employee : {
+                    include : {
+                        department : true,
+                        position : true
+                    }
+                },
                 leave_type : true
+            },
+            orderBy : {
+                L_ID : 'desc'
             }
         } );
         console.log( 'Sent today approved leaveWork...'.green );
@@ -208,7 +244,7 @@ const approveLeaveWork = async ( req, res ) => {
         const { id } = req.params;
         const leaveWork = await prisma.leave_work.update( {
             where : {
-                L_ID : id
+                L_ID : parseInt( id )
             },
             data : {
                 L_STATUS : 't'
@@ -220,13 +256,14 @@ const approveLeaveWork = async ( req, res ) => {
         } );
 
         const { employee, leave_type } = leaveWork
+        console.log( leaveWork )
         const { EM_ID } = employee
-        const { L_TYPE } = leave_type
+        const { LY_ID } = leave_type
 
         //get max date of leave type
-        const leaveTypeMaxDate = await prisma.leave_type.findUnique( {
+        const leaveTypeMaxDate = await prisma.leave_type.findFirst( {
             where : {
-                LY_ID : L_TYPE
+                LY_ID : LY_ID
             },
         } )
 
@@ -239,13 +276,9 @@ const approveLeaveWork = async ( req, res ) => {
         // if diffDays = 0 then diffDays = 1
         if ( diffDays === 0 ) diffDays = 1;
 
+
         // update or create leave remaining as raw query
-        const leaveRemaining = await prisma.$queryRaw( `
-            INSERT INTO leave_remaining (EM_ID, L_TYPE, LR_REMAIN_DATE)
-            VALUES (${ EM_ID }, ${ L_TYPE }, ${ leaveTypeMaxDate.LY_MAX_DATE - diffDays })
-            ON DUPLICATE KEY UPDATE LR_REMAIN_DATE = LR_REMAIN_DATE - ${ diffDays }` )
-
-
+        const leaveRemaining = await prisma.$queryRaw`INSERT INTO leave_remaining (EM_ID, L_TYPE, LR_REMAIN_DATE) VALUES (${ EM_ID }, ${ LY_ID }, ${ leaveTypeMaxDate.LY_MAX_DATE - diffDays }) ON DUPLICATE KEY UPDATE LR_REMAIN_DATE = ${ leaveTypeMaxDate.LY_MAX_DATE - diffDays }`
         if ( leaveWork && leaveRemaining ) {
             console.log( 'LeaveWork approved...'.green );
             res.status( 200 ).json( leaveWork );
@@ -262,7 +295,7 @@ const rejectLeaveWork = async ( req, res ) => {
         const { id } = req.params;
         const leaveWork = await prisma.leave_work.update( {
             where : {
-                L_ID : id
+                L_ID : parseInt( id )
             },
             data : {
                 L_STATUS : 'f'

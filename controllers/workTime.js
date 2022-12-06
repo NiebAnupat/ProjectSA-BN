@@ -115,11 +115,14 @@ const checkOut = async ( req, res ) => {
 const getTodayWorkTime = async ( req, res ) => {
     try {
         console.log( "GET today work time".bgBlue );
-        const workTime = await prisma.workTime.findMany( {
+        const workTime = await prisma.work_time_check.findMany( {
             where : {
                 IN_AT : {
                     gte : new Date( new Date().setHours( 0, 0, 0, 0 ) )
                 }
+            },
+            include : {
+                employee : true
             }
         } );
         console.log( "Sent today work time...".green );

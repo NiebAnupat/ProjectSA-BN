@@ -16,12 +16,12 @@ const {
 } = require( '../controllers/leaveWork' );
 
 // GET API
-router.get( '/', getAllLeaveWork );
+router.get( '/all', getAllLeaveWork );
 router.get( '/pending', getPendingLeaveWork );
 router.get( '/approved', getApprovedLeaveWork );
 router.get( '/rejected', getRejectedLeaveWork );
 router.get( '/todayApproved', getTodayApprovedLeaveWork );
-router.get( '/:id', getLeaveWork );
+router.get( '/by/:id', getLeaveWork );
 
 // POST API
 router.post( '/',upload.single('image'), leaveWork );
