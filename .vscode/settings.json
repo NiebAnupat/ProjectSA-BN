@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/cdf3d41b-76f2-4958-a4b0-99db115e8bec/AppServices/subscriptions/cdf3d41b-76f2-4958-a4b0-99db115e8bec/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/Project-ER-Website",
+    "appService.deploySubpath": "."
+}

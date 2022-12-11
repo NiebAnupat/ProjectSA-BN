@@ -19,14 +19,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://project-er-website.vercel.app",
   credentials: true,
 };
 app.use(cors(corsOptions));
 
-app.use("/", (req, res) => {
-  res.json({ message: "Welcome to the application." });
-});
+// app.use("/", (req, res) => {
+//   res.json({ message: "Welcome to the application." });
+// });
 app.use("/employee", employeeRouter);
 app.use("/workTime", workTimeRouter);
 app.use("/leaveWork", leaveWorkRouter);
