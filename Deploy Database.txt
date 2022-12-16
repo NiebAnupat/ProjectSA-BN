@@ -1,0 +1,25 @@
+.env
+database: project-er-website
+username: 0otu6ytmuvu6etfymxk3
+host: ap-southeast.connect.psdb.cloud
+password: pscale_pw_GKCF80qtBaTpMWPHl3DSgxPmFM4dO2Azh32sk1YmKk7
+
+@planetscale/database
+import { connect } from '@planetscale/database'
+
+const config = {
+  host: aws.connect.psdb.cloud,
+  username: 0otu6ytmuvu6etfymxk3,
+  password: pscale_pw_GKCF80qtBaTpMWPHl3DSgxPmFM4dO2Azh32sk1YmKk7
+}
+
+const conn = connect(config)
+const results = await conn.execute('select 1 from dual where 1=?', [1])
+
+
+Prisma
+datasource db {
+  provider = "mysql"
+  url = "mysql://0otu6ytmuvu6etfymxk3:pscale_pw_GKCF80qtBaTpMWPHl3DSgxPmFM4dO2Azh32sk1YmKk7@ap-southeast.connect.psdb.cloud/project-er-website?sslaccept=strict"
+}
+
