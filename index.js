@@ -10,16 +10,12 @@ const leaveWorkRouter = require("./routes/leaveWorkRouter.js");
 const paymentRouter = require("./routes/paymentRouter.js");
 const authRouter = require("./routes/authRouter.js");
 
-const ejs = require("ejs");
-const pdf = require("html-pdf-node");
-const path = require("path");
-
 const port = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const corsOptions = {
-  origin: "https://project-er-website.vercel.app",
+  origin: "http://localhost:3000",
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -43,3 +39,5 @@ app.listen(port, () => {
   console.log("Server is running...".cyan);
   console.log(`Listening on port ${port}`.cyan);
 });
+
+module.exports = app;
