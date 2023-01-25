@@ -8,75 +8,90 @@ datasource db {
 }
 
 model department {
-  DP_ID   Int    @id @default(autoincrement())
-  DP_NAME String @db.VarChar(100)
+  DP_ID    Int        @id @default(autoincrement())
+  DP_NAME  String     @db.VarChar(100)
+  employee employee[]
 }
 
 model employee {
-  EM_ID          String   @id @db.VarChar(7)
-  EM_PASSWORD    String   @db.VarChar(50)
-  EM_FNAME       String   @db.VarChar(100)
-  EM_LNAME       String   @db.VarChar(100)
-  EM_ADDRESS     String   @db.Text
-  EM_GENDER      String   @db.VarChar(6)
-  EM_TEL         String   @db.Char(10)
-  EM_BRITHDAY    DateTime @db.Date
-  DP_ID          Int
-  P_ID           Int
-  EM_SALARY      Float
-  EM_HIRE_DATE   DateTime @db.Date
-  EM_IMAGE       Bytes
-  EM_CHANGE_AT   DateTime @default(now()) @db.Timestamp(0)
-  EM_IS_ACTIVATE Boolean  @default(true)
+  EM_ID           String            @id @db.VarChar(7)
+  EM_PASSWORD     String            @db.VarChar(50)
+  EM_FNAME        String            @db.VarChar(100)
+  EM_LNAME        String            @db.VarChar(100)
+  EM_ADDRESS      String            @db.Text
+  EM_GENDER       String            @db.VarChar(6)
+  EM_TEL          String            @db.Char(10)
+  EM_BRITHDAY     DateTime          @db.Date
+  DP_ID           Int
+  P_ID            Int
+  EM_SALARY       Float
+  EM_HIRE_DATE    DateTime          @db.Date
+  EM_IMAGE        Bytes
+  EM_CHANGE_AT    DateTime          @default(now()) @db.Timestamp(0)
+  EM_IS_ACTIVATE  Boolean           @default(true)
+  department      department        @relation(fields: [DP_ID], references: [DP_ID], onUpdate: Restrict, map: "employee_ibfk_1")
+  position        position          @relation(fields: [P_ID], references: [P_ID], onUpdate: Restrict, map: "employee_ibfk_2")
+  leave_remaining leave_remaining[]
+  leave_work      leave_work[]
+  pay_slip        pay_slip[]
+  work_time_check work_time_check[]
 
   @@index([DP_ID], map: "DP_ID")
   @@index([P_ID], map: "P_ID")
 }
 
 model leave_work {
-  L_ID         Int      @id @default(autoincrement())
+  L_ID         Int        @id @default(autoincrement())
   L_TYPE       Int
-  EM_ID        String   @db.VarChar(7)
-  L_DATE_START DateTime @db.Date
-  L_DATE_END   DateTime @db.Date
-  L_NOTE       String   @db.Text
-  L_STATUS     String   @default("p") @db.Char(1)
+  EM_ID        String     @db.VarChar(7)
+  L_DATE_START DateTime   @db.Date
+  L_DATE_END   DateTime   @db.Date
+  L_NOTE       String     @db.Text
+  L_STATUS     String     @default("p") @db.Char(1)
   L_IMAGE      Bytes?
+  employee     employee   @relation(fields: [EM_ID], references: [EM_ID], onUpdate: Restrict, map: "leave_work_ibfk_1")
+  leave_type   leave_type @relation(fields: [L_TYPE], references: [LY_ID], onUpdate: Restrict, map: "leave_work_ibfk_2")
 
   @@index([EM_ID], map: "leave_work_employee_EM_ID_fk")
   @@index([L_TYPE], map: "L_TYPE")
 }
 
 model position {
-  P_ID   Int    @id @default(autoincrement())
-  P_NAME String @db.VarChar(50)
+  P_ID     Int        @id @default(autoincrement())
+  P_NAME   String     @db.VarChar(50)
+  employee employee[]
 }
 
 model work_time_check {
-  WT_ID   Int       @id @default(autoincrement())
-  EM_ID   String    @db.VarChar(7)
-  DATE    DateTime  @db.Date
-  IN_AT   DateTime  @db.Time(0)
-  OUT_AT  DateTime? @db.Time(0)
-  IS_LATE Boolean
+  WT_ID    Int       @id @default(autoincrement())
+  EM_ID    String    @db.VarChar(7)
+  DATE     DateTime  @db.Date
+  IN_AT    DateTime  @db.Time(0)
+  OUT_AT   DateTime? @db.Time(0)
+  IS_LATE  Boolean
+  employee employee  @relation(fields: [EM_ID], references: [EM_ID], onUpdate: Restrict, map: "work_time_check_ibfk_1")
 
   @@index([EM_ID], map: "work_time_check_employee_EM_ID_fk")
 }
 
 model leave_remaining {
-  LR_ID          Int    @id @default(autoincrement())
+  LR_ID          Int        @id @default(autoincrement())
   L_TYPE         Int
-  EM_ID          String @db.VarChar(7)
+  EM_ID          String     @db.VarChar(7)
   LR_REMAIN_DATE Int
+  employee       employee   @relation(fields: [EM_ID], references: [EM_ID], onUpdate: Restrict, map: "leave_remaining_ibfk_1")
+  leave_type     leave_type @relation(fields: [L_TYPE], references: [LY_ID], onUpdate: Restrict, map: "leave_remaining_ibfk_2")
 
   @@index([EM_ID], map: "EM_ID")
   @@index([L_TYPE], map: "L_TYPE")
 }
 
 model leave_type {
-  LY_ID       Int    @id @default(autoincrement())
-  LY_NAME     String @db.VarChar(20)
-  LY_MAX_DATE Int
+  LY_ID           Int               @id @default(autoincrement())
+  LY_NAME         String            @db.VarChar(20)
+  LY_MAX_DATE     Int
+  leave_remaining leave_remaining[]
+  leave_work      leave_work[]
 }
 
 model pay_slip {
@@ -86,6 +101,7 @@ model pay_slip {
   PS_SSO        Float
   PS_TAX        Float
   PS_NET_SALARY Float
+  employee      employee @relation(fields: [EM_ID], references: [EM_ID], onUpdate: Restrict, map: "pay_slip_ibfk_1")
 
   @@index([EM_ID], map: "pay_salary_employee_EM_ID_fk")
 }

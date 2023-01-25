@@ -35,9 +35,9 @@ app.get("/Logo.png", (req, res) => {
   res.sendFile("views/Logo.png", { root: __dirname });
 });
 
-app.listen(port, () => {
-  console.log("Server is running...".cyan);
-  console.log(`Listening on port ${port}`.cyan);
-});
+// app.listen(port, () => {
+//   console.log("Server is running...".cyan);
+//   console.log(`Listening on port ${port}`.cyan);
+// });
 
 module.exports = app;

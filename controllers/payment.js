@@ -4,13 +4,13 @@ const prisma = new PrismaClient();
 const ejs = require("ejs");
 const pdf = require("html-pdf-node");
 const fs = require("fs");
+const PDFMerger = require('pdf-merger-js');
 const moment = require("moment/moment");
 
 const createPaySlip = async (req, res) => {
   try {
     console.log("POST create pay slip".bgBlue);
     const { EM_ID } = req.params;
-
     // check if employee has payment in this month
     const payment = await prisma.pay_slip.findFirst({
       where: {
@@ -107,7 +107,8 @@ const createPaySlip = async (req, res) => {
           console.log(`Error: ${err}`.red);
           return res.status(500).json(err);
         });
-    } else {
+    }
+    else {
       // get employee salary
       const employee = await prisma.employee.findUnique({
         where: {
@@ -157,6 +158,8 @@ const createPaySlip = async (req, res) => {
           },
         },
       });
+
+      console.log("Render pay slip...".green);
 
       // get month in pay slip
       const payDate = new Date(lastPaySlip.PS_DATE);

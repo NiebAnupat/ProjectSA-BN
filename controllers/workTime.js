@@ -138,7 +138,7 @@ const getTodayWorkTime = async (req, res) => {
     console.log("GET today work time".bgBlue);
     const workTime = await prisma.work_time_check.findMany({
       where: {
-        IN_AT: {
+        DATE: {
           gte: new Date(new Date().setHours(0, 0, 0, 0)),
         },
       },
