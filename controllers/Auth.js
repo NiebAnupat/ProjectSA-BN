@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const empLogin = async ( req, res ) => {
     // login with employee id and password and sent back token
     try {
-        console.log( 'POST employee login'.bgBlue );
+        console.log( 'POST employee login' );
         const { EM_ID, EM_PASSWORD } = req.body;
         const employee = await prisma.employee.findUnique( {
             where : {
@@ -19,25 +19,25 @@ const empLogin = async ( req, res ) => {
                 }, process.env.JWT_SECRET, {
                     expiresIn : '1h'
                 } );
-                console.log( 'Sent token...'.green );
+                console.log( 'Sent token...' );
                 res.status( 200 ).json( token );
             } else {
-                console.log( 'Wrong password'.red );
+                console.log( 'Wrong password' );
                 res.status( 200 ).json( null );
             }
         } else {
-            console.log( 'Employee not found'.red );
+            console.log( 'Employee not found' );
             res.status( 200 ).json( null );
         }
     } catch ( error ) {
-        console.log( `${ error }`.red );
+        console.log( `${ error }` );
         res.status( 500 ).json( error );
     }
 }
 
 const hrLogin = async ( req, res ) => {
     try {
-        console.log( 'POST hr login'.bgBlue );
+        console.log( 'POST hr login' );
         const { EM_ID, EM_PASSWORD } = req.body;
         const hr = await prisma.employee.findUnique( {
             where : {
@@ -53,29 +53,29 @@ const hrLogin = async ( req, res ) => {
                     }, process.env.JWT_SECRET, {
                         expiresIn : '1h'
                     } );
-                    console.log( 'Sent token...'.green );
+                    console.log( 'Sent token...' );
                     res.status( 200 ).json( token );
                 }else {
-                    console.log( 'Not HR'.red );
+                    console.log( 'Not HR' );
                     res.status( 200 ).json( null );
                 }
             } else {
-                console.log( 'Wrong password'.red );
+                console.log( 'Wrong password' );
                 res.status( 200 ).json( null );
             }
         } else {
-            console.log( 'HR not found'.red );
+            console.log( 'HR not found' );
             res.status( 200 ).json( null );
         }
     } catch ( error ) {
-        console.log( `${ error }`.red );
+        console.log( `${ error }` );
         res.status( 500 ).json( error );
     }
 }
 
 const auth = async ( req, res ) => {
     try {
-        console.log( 'POST auth'.bgBlue );
+        console.log( 'POST auth' );
         const { token } = req.body;
         const decoded = jwt.verify( token, process.env.JWT_SECRET );
         const employee = await prisma.employee.findUnique( {
@@ -84,14 +84,14 @@ const auth = async ( req, res ) => {
             }
         } );
         if ( employee ) {
-            console.log( 'Sent employee...'.green );
+            console.log( 'Sent employee...' );
             res.status( 200 ).json( employee );
         } else {
-            console.log( 'Employee not found'.red );
+            console.log( 'Employee not found' );
             res.status( 200 ).json( null );
         }
     } catch ( error ) {
-        console.log( `${ error }`.red );
+        console.log( `${ error }` );
         res.status( 500 ).json( error );
     }
 }

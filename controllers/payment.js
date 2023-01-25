@@ -9,7 +9,7 @@ const moment = require("moment/moment");
 
 const createPaySlip = async (req, res) => {
   try {
-    console.log("POST create pay slip".bgBlue);
+    console.log("POST create pay slip");
     const { EM_ID } = req.params;
     // check if employee has payment in this month
     const payment = await prisma.pay_slip.findFirst({
@@ -35,7 +35,7 @@ const createPaySlip = async (req, res) => {
     if (payment) {
       // render pay slip
 
-      console.log(`Employee ${EM_ID} has payment in this month`.bgGreen);
+      console.log(`Employee ${EM_ID} has payment in this month`);
       const ps = payment;
 
       // get today as string
@@ -104,7 +104,7 @@ const createPaySlip = async (req, res) => {
             .end(pdfBuffer);
         })
         .catch((err) => {
-          console.log(`Error: ${err}`.red);
+          console.log(`Error: ${err}`);
           return res.status(500).json(err);
         });
     }
@@ -138,8 +138,8 @@ const createPaySlip = async (req, res) => {
         },
       });
 
-      console.log("Created pay slip...".green);
-      console.log(`Pay slip for employee ${EM_ID} created`.green);
+      console.log("Created pay slip...");
+      console.log(`Pay slip for employee ${EM_ID} created`);
 
       // get last pay slip
       const lastPaySlip = await prisma.pay_slip.findFirst({
@@ -159,7 +159,7 @@ const createPaySlip = async (req, res) => {
         },
       });
 
-      console.log("Render pay slip...".green);
+      console.log("Render pay slip...");
 
       // get month in pay slip
       const payDate = new Date(lastPaySlip.PS_DATE);
@@ -236,12 +236,12 @@ const createPaySlip = async (req, res) => {
             .end(pdfBuffer);
         })
         .catch((err) => {
-          console.log(`Error: ${err}`.red);
+          console.log(`Error: ${err}`);
           return res.status(500).json(err);
         });
     }
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
@@ -249,7 +249,7 @@ const createPaySlip = async (req, res) => {
 const createAllPaySlips = async (req, res) => {
   // create All Pay Slips For All Employees
   try {
-    console.log("POST create all pay slips".bgBlue);
+    console.log("POST create all pay slips");
     // const HR_ID = parseInt(req.body.EM_ID);
 
     // get HR Name
@@ -292,10 +292,10 @@ const createAllPaySlips = async (req, res) => {
         }
       }
       if (hasPaySlip) {
-        console.log(`Employee ${EM_ID} has pay slip for this month`.green);
+        console.log(`Employee ${EM_ID} has pay slip for this month`);
         continue;
       }
-      console.log(`Creating pay slip for employee ${employee.EM_ID}`.green);
+      console.log(`Creating pay slip for employee ${employee.EM_ID}`);
       const salary = employee.EM_SALARY;
       // calculate SSO 5% from salary, Max salary 15000
       var sso = 0;
@@ -317,8 +317,8 @@ const createAllPaySlips = async (req, res) => {
         },
       });
 
-      console.log("Created pay slip...".green);
-      console.log(`Pay slip for employee ${EM_ID} created`.green);
+      console.log("Created pay slip...");
+      console.log(`Pay slip for employee ${EM_ID} created`);
     }
     // res.status( 200 ).json( "All pay slips created" );
     // get pdf as one file
@@ -368,7 +368,6 @@ const createAllPaySlips = async (req, res) => {
       fs.unlinkSync(`${__basedir}/public/pdfs/${file}`);
     }
   } catch (error) {
-    // console.log( `${ error }`.red );
     console.log(error);
     res.status(500).json(error);
   }

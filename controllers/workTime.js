@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const checkIn = async (req, res) => {
   try {
-    console.log("POST Check IN".bgBlue);
+    console.log("POST Check IN");
     const { EM_ID } = req.body;
     const today = new Date();
     const now = new Date(
@@ -55,21 +55,21 @@ const checkIn = async (req, res) => {
           IN_AT: checkInTimeSQL,
         },
       });
-      console.log(`Employee ${EM_ID} check in at ${checkInTime}`.bgGreen);
+      console.log(`Employee ${EM_ID} check in at ${checkInTime}`);
       res.status(200).json({msg: "Check in success",data:workTime});
     } else {
-      console.log(`Employee ${EM_ID} already check in `.bgGreen);
+      console.log(`Employee ${EM_ID} already check in `);
       res.status(200).json({msg: "Already check in",data:temp});
     }
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
 
 const checkOut = async (req, res) => {
   try {
-    console.log("POST Check OUT".bgBlue);
+    console.log("POST Check OUT");
     const { EM_ID } = req.body;
 
     const today = new Date();
@@ -112,14 +112,14 @@ const checkOut = async (req, res) => {
             new Date().setHours(0, 0, 0, 0)
         )}`;
 
-        console.log(`Employee ${EM_ID} check out at ${checkOutTime}`.bgGreen);
+        console.log(`Employee ${EM_ID} check out at ${checkOutTime}`);
 
         // select last check out
         const lastCheckOut = await prisma.$queryRaw`SELECT * FROM work_time_check WHERE EM_ID = ${EM_ID} AND \`DATE\` =DATE AND OUT_AT IS NOT NULL ORDER BY DATE DESC LIMIT 1`;
 
         res.status(200).json({msg: "Check out success",data:lastCheckOut});
       } else {
-        console.log(`Employee ${EM_ID} already check out `.bgGreen);
+        console.log(`Employee ${EM_ID} already check out `);
         // select last check out
         const lastCheckOut = await prisma.$queryRaw`SELECT * FROM work_time_check WHERE EM_ID = ${EM_ID} AND \`DATE\` =DATE AND OUT_AT IS NOT NULL ORDER BY DATE DESC LIMIT 1`;
         res.status(200).json({msg: "Already check out",data:lastCheckOut});
@@ -128,14 +128,14 @@ const checkOut = async (req, res) => {
 
 
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
 
 const getTodayWorkTime = async (req, res) => {
   try {
-    console.log("GET today work time".bgBlue);
+    console.log("GET today work time");
     const workTime = await prisma.work_time_check.findMany({
       where: {
         DATE: {
@@ -146,10 +146,10 @@ const getTodayWorkTime = async (req, res) => {
         employee: true,
       },
     });
-    console.log("Sent today work time...".green);
+    console.log("Sent today work time...");
     res.status(200).json(workTime);
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };

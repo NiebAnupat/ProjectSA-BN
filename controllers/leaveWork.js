@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 const leaveWork = async (req, res) => {
   try {
-    console.log("POST leaveWork".bgBlue);
+    console.log("POST leaveWork");
     const { EM_ID, L_TYPE_NAME, L_DATE_START, L_DATE_END, L_NOTE } = req.body;
     let img = null;
     if (req.file !== undefined) {
@@ -66,7 +66,7 @@ const leaveWork = async (req, res) => {
     });
 
     if (leaveWork) {
-      console.log("leaveWork and leaveRemaining created".green);
+      console.log("leaveWork and leaveRemaining created");
       res.status(200).json(leaveWork);
     } else return res.json(null);
 
@@ -75,14 +75,14 @@ const leaveWork = async (req, res) => {
       fs.unlinkSync(__basedir + "/assets/uploads/" + req.file.filename);
     }
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     return res.status(500);
   }
 };
 
 const getAllLeaveWork = async (req, res) => {
   try {
-    console.log("GET all leaveWork".bgBlue);
+    console.log("GET all leaveWork");
     const leaveWork = await prisma.leave_work.findMany({
       include: {
         employee: true,
@@ -92,7 +92,7 @@ const getAllLeaveWork = async (req, res) => {
         L_ID: "desc",
       },
     });
-    console.log("sent all leaveWork...".green);
+    console.log("sent all leaveWork...");
     res.status(200).json(leaveWork);
   } catch (error) {
     res.status(500).json(error);
@@ -101,7 +101,7 @@ const getAllLeaveWork = async (req, res) => {
 
 const getLeaveWork = async (req, res) => {
   try {
-    console.log("GET leaveWork".bgBlue);
+    console.log("GET leaveWork");
     const { id } = req.params;
     const leaveWork = await prisma.leave_work.findMany({
       where: {
@@ -119,17 +119,17 @@ const getLeaveWork = async (req, res) => {
         L_ID: "desc",
       },
     });
-    console.log("Sent leaveWork...".green);
+    console.log("Sent leaveWork...");
     res.status(200).json(leaveWork);
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
 
 const getPendingLeaveWork = async (req, res) => {
   try {
-    console.log("GET pending leaveWork".bgBlue);
+    console.log("GET pending leaveWork");
     const leaveWork = await prisma.leave_work.findMany({
       where: {
         L_STATUS: "p",
@@ -146,17 +146,17 @@ const getPendingLeaveWork = async (req, res) => {
         L_ID: "desc",
       },
     });
-    console.log("Sent pending leaveWork...".green);
+    console.log("Sent pending leaveWork...");
     res.status(200).json(leaveWork);
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
 
 const getApprovedLeaveWork = async (req, res) => {
   try {
-    console.log("GET approved leaveWork".blue);
+    console.log("GET approved leaveWork");
     const leaveWork = await prisma.leave_work.findMany({
       where: {
         L_STATUS: "t",
@@ -170,17 +170,17 @@ const getApprovedLeaveWork = async (req, res) => {
       },
     });
 
-    console.log("Sent approved leaveWork...".green);
+    console.log("Sent approved leaveWork...");
     res.status(200).json(leaveWork);
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
 
 const getRejectedLeaveWork = async (req, res) => {
   try {
-    console.log("GET rejected leaveWork".bgBlue);
+    console.log("GET rejected leaveWork");
     const leaveWork = await prisma.leave_work.findMany({
       where: {
         L_STATUS: "f",
@@ -193,17 +193,17 @@ const getRejectedLeaveWork = async (req, res) => {
         L_ID: "desc",
       },
     });
-    console.log("Sent rejected leaveWork...".green);
+    console.log("Sent rejected leaveWork...");
     res.status(200).json(leaveWork);
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
 
 const getTodayApprovedLeaveWork = async (req, res) => {
   try {
-    console.log("GET today approved leaveWork".bgBlue);
+    console.log("GET today approved leaveWork");
     const leaveWork = await prisma.leave_work.findMany({
       where: {
         L_STATUS: "t",
@@ -227,17 +227,17 @@ const getTodayApprovedLeaveWork = async (req, res) => {
         L_ID: "desc",
       },
     });
-    console.log("Sent today approved leaveWork...".green);
+    console.log("Sent today approved leaveWork...");
     res.status(200).json(leaveWork);
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
 
 const approveLeaveWork = async (req, res) => {
   try {
-    console.log("PUT approve leaveWork".bgBlue);
+    console.log("PUT approve leaveWork");
     const { id } = req.params;
     const leaveWork = await prisma.leave_work.update({
       where: {
@@ -253,7 +253,6 @@ const approveLeaveWork = async (req, res) => {
     });
 
     const { employee, leave_type } = leaveWork;
-    console.log(leaveWork);
     const { EM_ID } = employee;
     const { LY_ID } = leave_type;
 
@@ -281,18 +280,18 @@ const approveLeaveWork = async (req, res) => {
         leaveTypeMaxDate.LY_MAX_DATE - diffDays
       }`;
     if (leaveWork && leaveRemaining) {
-      console.log("LeaveWork approved...".green);
+      console.log("LeaveWork approved...");
       res.status(200).json(leaveWork);
     } else res.json(null);
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
 
 const rejectLeaveWork = async (req, res) => {
   try {
-    console.log("PUT reject leaveWork".bgBlue);
+    console.log("PUT reject leaveWork");
     const { id } = req.params;
     const leaveWork = await prisma.leave_work.update({
       where: {
@@ -302,10 +301,10 @@ const rejectLeaveWork = async (req, res) => {
         L_STATUS: "f",
       },
     });
-    console.log("LeaveWork rejected...".green);
+    console.log("LeaveWork rejected...");
     res.status(200).json(leaveWork);
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };

@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const colors = require("colors");
 require("dotenv").config();
 global.__basedir = __dirname;
 
@@ -18,7 +17,7 @@ const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true,
 };
-app.use(cors(corsOptions));
+app.use(cors());
 
 // app.use("/", (req, res) => {
 //   res.json({ message: "Welcome to the application." });
@@ -36,8 +35,8 @@ app.get("/Logo.png", (req, res) => {
 });
 
 // app.listen(port, () => {
-//   console.log("Server is running...".cyan);
-//   console.log(`Listening on port ${port}`.cyan);
+//   console.log("Server is running...");
+//   console.log(`Listening on port ${port}`);
 // });
 
 module.exports = app;

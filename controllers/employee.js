@@ -5,7 +5,7 @@ const moment = require("moment");
 
 const getEmployees = async (req, res) => {
   try {
-    console.log("GET all employees".bgBlue);
+    console.log("GET all employees");
     const employees = await prisma.employee.findMany({
       where: {
         EM_IS_ACTIVATE: true,
@@ -15,17 +15,17 @@ const getEmployees = async (req, res) => {
         position: true,
       },
     });
-    console.log("Sent all employees...".green);
+    console.log("Sent all employees...");
     res.status(200).json(employees);
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
 
 const getEmployee = async (req, res) => {
   try {
-    console.log("GET employee".bgBlue);
+    console.log("GET employee");
     const { id } = req.params;
     const employee = await prisma.employee.findUnique({
       where: {
@@ -36,18 +36,17 @@ const getEmployee = async (req, res) => {
         position: true,
       },
     });
-    console.log("Sent employee...".green);
+    console.log("Sent employee...");
     res.status(200).json(employee);
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
 
 const updateEmployee = async (req, res) => {
   try {
-    console.log("PUT employee".bgBlue);
-    console.log(req.body);
+    console.log("PUT employee");
     const { id } = req.params;
     const {
       EM_FNAME,
@@ -119,7 +118,7 @@ const updateEmployee = async (req, res) => {
       });
     }
 
-    console.log("Employee updated...".green);
+    console.log("Employee updated...");
     res.status(200).json(employee);
 
     // delete file
@@ -127,7 +126,7 @@ const updateEmployee = async (req, res) => {
       fs.unlinkSync(__basedir + "/assets/uploads/" + req.file.filename);
     }
   } catch (error) {
-    console.log(`${error}`.red);
+    console.log(`${error}`);
     res.status(500).json(error);
   }
 };
